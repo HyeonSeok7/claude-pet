@@ -1,24 +1,24 @@
 # 커밋 컨벤션
 
 Claude Pet 저장소는 [Conventional Commits 1.0](https://www.conventionalcommits.org/) 을
-따릅니다. 깃 히스토리를 읽기 쉽게 만들고, 자동 릴리즈 노트(GitHub Actions 의
-`generate_release_notes: true`) 가 의미 있는 항목을 뽑아내도록 하기 위함입니다.
+따릅니다. 깃 히스토리를 읽기 쉽게 만들고, release-please 가 의미 있는 항목을 뽑아
+자동 CHANGELOG 와 Release 노트를 만들도록 하기 위함입니다.
 
 ---
 
 ## 1. 포맷
 
 ```
-<type>(<scope>): <subject>
+<type>(<scope>): <한글 요약>
 
-<body>
+<본문>
 
 <footer>
 ```
 
-- **한 줄 요약** 만으로 충분한 경우 `body / footer` 는 생략.
-- 제목은 72자 이내, 명령형 현재시제 (`add`, `fix`, `refactor`). 마침표 없음.
-- 한국어·영어 혼용 허용. 팀/본인 편한 쪽으로 일관되게.
+- **한 줄 요약**만으로 충분하면 본문 / footer 는 생략합니다.
+- `type` 과 `scope` 는 **영문 고정** — release-please 가 파싱하는 기준입니다.
+- 제목(한글 요약) 은 **한글**로 작성, 72자 이내, 마침표 없음.
 
 ---
 
@@ -64,42 +64,42 @@ Claude Pet 저장소는 [Conventional Commits 1.0](https://www.conventionalcommi
 
 ---
 
-## 4. Subject — 한 줄 요약
+## 4. 제목(한글 요약) 작성법
 
-- 무엇을 했는지 **명령형** 으로 씀 (“added” X, **“add”** O).
-- 왜는 body 에 (필요하면).
+- **무엇을 했는지 한글로** 간결하게. "~추가", "~수정", "~분리" 같이 명사·어근으로 마무리.
+- 왜는 본문에 (필요하면).
 - 제목에 `#이슈번호` 넣지 말고 footer 에.
 
 좋은 예:
 ```
-feat(ui): add reset confirmation dialog triggered by right-click
-fix(state): prevent Working state from sticking when Claude CLI runs
-refactor(state): group private cache vars with intent comments
-build(icons): regenerate 10-resolution icns from 1024x1024 source
+feat(ui): 우클릭 시 초기화 확인 다이얼로그 추가
+fix(state): Claude CLI 실행 중 작업 모드가 고착되는 현상 해결
+refactor(state): 내부 캐시 var 를 의도 주석과 함께 그룹화
+build(icons): 1024x1024 원본에서 10단계 해상도 icns 재생성
 ```
 
 피할 것:
 ```
-update code                   ← 구체성 0
-fixed a bug                   ← 과거형 + 뭐 고쳤는지 모름
-PetCharacter.kt 수정          ← 파일명만
+코드 수정              ← 구체성 0
+버그 고침              ← 무슨 버그인지 모름
+PetCharacter.kt 수정   ← 파일명만 나열
 ```
 
 ---
 
-## 5. Body (선택)
+## 5. 본문 (선택)
 
 - **왜 이 변경이 필요한가** 가 명확하지 않은 경우에만 작성
-- 한 줄 72자 내외 wrap
+- 한 줄 72자 내외로 줄바꿈
 - What 은 코드로 명백하니 Why 에 집중
 - 여러 관점이 섞이면 커밋 자체를 쪼개는 것 검토
 
 예시:
 ```
-fix(state): resolve SIGTRAP crash on macOS arm64
+fix(state): macOS arm64 의 SIGTRAP 크래시 해결
 
 Temurin 21.0.10 의 C2 JIT 이 Compose Desktop 실행 초기에 SIGTRAP 으로
-JVM 을 죽였음 (exit value 133). `-Xint` 에서 정상 동작 → JIT 버그 확정.
+JVM 을 죽였음 (exit 133). `-Xint` 에서 정상 동작 → JIT 버그 확정.
 로컬 개발은 JBR 21 을 가리키도록 ~/.gradle/gradle.properties 로 이식.
 
 배포 빌드는 CI 의 Zulu 21 로 회피.
@@ -121,7 +121,7 @@ JVM 을 죽였음 (exit value 133). `-Xint` 에서 정상 동작 → JIT 버그 
 
 **① `!` 표기 (권장, 짧음)**
 ```
-feat(db)!: migrate pet_state schema to v3
+feat(db)!: pet_state 스키마를 v3 로 마이그레이션
 
 BREAKING CHANGE: animation_state 컬럼이 TEXT → INTEGER 로 변경됨.
 기존 DB 는 install_id 불일치 경로로 자동 리셋되어 호환 처리됨.
@@ -129,7 +129,7 @@ BREAKING CHANGE: animation_state 컬럼이 TEXT → INTEGER 로 변경됨.
 
 **② footer 만**
 ```
-refactor(api): rename PetRepository.updateAnimationState → setAnimationState
+refactor(api): PetRepository.updateAnimationState 를 setAnimationState 로 변경
 
 BREAKING CHANGE: 호출자 전부 교체 필요.
 ```
@@ -140,19 +140,19 @@ BREAKING CHANGE: 호출자 전부 교체 필요.
 
 좋은 커밋 (이 프로젝트에서 실제 있었을 법한):
 ```
-feat(state): animate walk with 2-frame sprite cycle and easeInOutCubic offset
-fix(ci): strip local org.gradle.java.home from gradle.properties before build
-build(release): auto-collect .dmg/.msi into project-root dist/ via Gradle task
-ci(hooks): block system-wide destructive commands with recursive script scan
-docs(readme): add AI harness engineering section and debugging case studies
-chore(release): bump to v1.0.1
+feat(state): 걷기 모션을 2프레임 스프라이트 + easeInOutCubic 오프셋으로 애니메이션
+fix(ci): 빌드 전 gradle.properties 의 로컬 org.gradle.java.home 제거
+build(release): .dmg/.msi 를 Gradle 태스크로 루트 dist/ 에 자동 수집
+ci(hooks): 시스템 전역 파괴 명령을 재귀 스크립트 스캔으로 차단
+docs(readme): AI 하네스 엔지니어링 섹션과 디버깅 사례 추가
+chore(release): v1.0.1 버전 bump
 ```
 
 ---
 
 ## 9. 체크리스트 (커밋 전)
 
-- [ ] 제목 72자 이내 + 명령형 + 마침표 없음
+- [ ] 제목 72자 이내 + 한글 + 마침표 없음
 - [ ] `type` 선택이 정확한가 (feat/fix/refactor 헷갈리면 위 기준 재확인)
 - [ ] scope 가 커밋 범위와 맞는가 (여러 영역이면 빼고 scope 없이)
 - [ ] 한 커밋 = 한 목적 (여러 목적이 섞이면 분리)
@@ -166,7 +166,7 @@ chore(release): bump to v1.0.1
 PR 제목도 동일 컨벤션. Squash merge 시 자동으로 깔끔한 한 줄 히스토리 유지.
 
 ```
-feat(ui): add automatic update notification via GitHub Releases API
+feat(ui): GitHub Releases API 기반 자동 업데이트 알림 추가
 ```
 
-PR 본문에 "왜" 를 설명, 커밋 본문엔 최소화해도 됨.
+PR 본문에 "왜" 를 설명, 커밋 본문엔 최소화해도 됩니다.
