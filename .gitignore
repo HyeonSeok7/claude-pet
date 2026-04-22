@@ -1,0 +1,30 @@
+# ---- Gradle / IDE ----
+.gradle/
+build/
+.idea/
+*.iml
+out/
+.kotlin/
+local.properties
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- 배포 산출물 ----
+# `./gradlew packageDmg` 등이 만드는 네이티브 인스톨러 (수십~수백 MB)
+dist/
+!dist/.gitkeep
+
+# ---- 빌드 시 동적 생성되는 리소스 ----
+# app_version / install_id / github_owner / github_repo 는 Gradle 태스크가 매번 새로 생성
+composeApp/src/jvmMain/resources/app_version.txt
+composeApp/src/jvmMain/resources/install_id.txt
+composeApp/src/jvmMain/resources/github_owner.txt
+composeApp/src/jvmMain/resources/github_repo.txt
+composeApp/src/jvmMain/generated/
+
+# ---- AI 하네스 로컬 설정 ----
+# .claude/ 자체는 공개 (AI 하네스 엔지니어링 일환) — 단 local 설정은 제외
+.claude/settings.local.json
+.claude/**/*.local.json

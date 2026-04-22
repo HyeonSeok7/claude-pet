@@ -1,0 +1,50 @@
+CREATE TABLE IF NOT EXISTS pet_state (
+    id              INTEGER NOT NULL PRIMARY KEY,
+    x               INTEGER NOT NULL,
+    y               INTEGER NOT NULL,
+    satiation       REAL    NOT NULL,
+    affinity        INTEGER NOT NULL,
+    keystrokes      INTEGER NOT NULL,
+    animation_state TEXT    NOT NULL DEFAULT 'Default',
+    install_id      TEXT    NOT NULL DEFAULT '',
+    updated_at      INTEGER NOT NULL
+);
+
+seedDefault:
+INSERT OR IGNORE INTO pet_state(id, x, y, satiation, affinity, keystrokes, animation_state, install_id, updated_at)
+VALUES (1, :x, :y, 100.0, 0, 0, 'Default', '', :updatedAt);
+
+selectPet:
+SELECT x, y, satiation, affinity, keystrokes, animation_state, updated_at
+FROM pet_state
+WHERE id = 1;
+
+selectInstallId:
+SELECT install_id FROM pet_state WHERE id = 1;
+
+updatePosition:
+UPDATE pet_state SET x = :x, y = :y, updated_at = :updatedAt WHERE id = 1;
+
+updateSatiation:
+UPDATE pet_state SET satiation = :satiation, updated_at = :updatedAt WHERE id = 1;
+
+updateAffinity:
+UPDATE pet_state SET affinity = :affinity, updated_at = :updatedAt WHERE id = 1;
+
+updateAnimationState:
+UPDATE pet_state SET animation_state = :state, updated_at = :updatedAt WHERE id = 1;
+
+updateInstallId:
+UPDATE pet_state SET install_id = :installId, updated_at = :updatedAt WHERE id = 1;
+
+incrementKeystrokes:
+UPDATE pet_state SET keystrokes = keystrokes + :delta, updated_at = :updatedAt WHERE id = 1;
+
+resetProgress:
+UPDATE pet_state
+SET satiation = 100.0,
+    affinity = 0,
+    keystrokes = 0,
+    animation_state = 'Default',
+    updated_at = :updatedAt
+WHERE id = 1;
