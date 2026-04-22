@@ -3,7 +3,7 @@
 
   cp docs/release-notes-template.md /tmp/notes.md
   # /tmp/notes.md 편집: <VERSION> 치환 + 변경 사항 작성
-  gh release edit vX.Y.Z --repo hspineone/claude-pet --notes-file /tmp/notes.md
+  gh release edit vX.Y.Z --repo HyeonSeok7/claude-pet --notes-file /tmp/notes.md
 -->
 
 ## 변경 사항
