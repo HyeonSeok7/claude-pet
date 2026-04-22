@@ -14,7 +14,7 @@
 ![license](https://img.shields.io/badge/license-MIT-green)
 
 <img src="composeApp/src/jvmMain/resources/pet/idle_smile.png" width="140" alt="pet smile"/>
-<img src="composeApp/src/jvmMain/resources/pet/idle_working.png" width="140" alt="pet working"/>
+<img src="composeApp/src/jvmMain/resources/pet/idle_jumping.png" width="140" alt="pet jumping"/>
 <img src="composeApp/src/jvmMain/resources/pet/idle_hungry.png" width="140" alt="pet hungry"/>
 
 </div>
