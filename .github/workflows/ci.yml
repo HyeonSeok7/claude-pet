@@ -1,0 +1,33 @@
+name: CI
+
+# main 에 커밋이 올라오거나 PR 이 열리면 컴파일이 깨지지 않는지 자동 검증.
+# release.yml 은 태그 push 때만 도는 반면 이 워크플로는 매 변경마다 돈다.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  compile:
+    name: Compile Kotlin/JVM
+    # Compose Desktop 의 Kotlin JVM 컴파일은 플랫폼 독립. Linux 가 분당 요금·속도 모두 유리.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 21 (Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          cache: gradle
+
+      # 로컬 개발자용 `org.gradle.java.home` (각자 맥의 JBR 경로) 이 혹시
+      # 프로젝트 gradle.properties 에 유입됐을 때 CI 에서 경로 불일치로 실패하지 않도록 제거.
+      - name: Strip local JDK pin from gradle.properties
+        run: sed -i.bak '/^org\.gradle\.java\.home=/d' gradle.properties
+
+      - name: Compile
+        run: ./gradlew :composeApp:compileKotlinJvm --no-daemon --stacktrace
