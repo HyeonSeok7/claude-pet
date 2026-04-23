@@ -212,8 +212,18 @@ compose.desktop {
             vendor = "me"
 
             // jlink 가 만드는 최소 JRE 에 포함시킬 JDK 모듈.
-            // `:composeApp:suggestRuntimeModules` 가 추천한 값.
-            modules("java.instrument", "java.sql", "jdk.unsupported")
+            // - java.instrument / java.sql / jdk.unsupported: SQLDelight + sqlite-jdbc 용.
+            // - java.management / java.naming / java.logging: JNA 5.x 가 런타임에
+            //   Management·JNDI·Logger API 를 참조. 빠지면 Windows jpackage 번들이
+            //   "Failed to launch JVM" 으로 기동 실패한다 (v1.1.0 에서 확인됨).
+            modules(
+                "java.instrument",
+                "java.sql",
+                "java.management",
+                "java.naming",
+                "java.logging",
+                "jdk.unsupported",
+            )
 
             macOS {
                 bundleID = "com.myclaudepet.desktop"
