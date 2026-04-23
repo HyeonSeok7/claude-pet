@@ -113,7 +113,7 @@ tasks.withType<JavaExec>().matching { it.name == "run" }.configureEach {
 
 // ──────────────────────── Native Distribution Pipeline ────────────────────────
 // 배포 산출물을 프로젝트 루트 `dist/` 로 모은다.
-// `./gradlew packageDmg` 등 실행 후 자동으로 `dist/ClaudePet-1.0.0.dmg` 에 사본 생성.
+// `./gradlew packageDmg` 등 실행 후 자동으로 `dist/ClaudePet-<projectVersion>.dmg` 에 사본 생성.
 val distDir = rootProject.layout.projectDirectory.dir("dist")
 val collectDistributables by tasks.registering(Copy::class) {
     description = "배포 산출물을 dist/ 로 복사"
@@ -138,7 +138,7 @@ tasks.matching {
 //  • dmgIconize       : dmg 파일 자체 리소스 포크에 `fileicon` 으로 custom icon 주입
 val injectVolumeIcon = tasks.register("injectVolumeIcon") {
     mustRunAfter(collectDistributables)
-    val dmgPath = rootProject.file("dist/ClaudePet-1.0.0.dmg").absolutePath
+    val dmgPath = rootProject.file("dist/ClaudePet-${projectVersionProp}.dmg").absolutePath
     val iconPath = file("icons/app-icon.icns").absolutePath
     val scriptPath = rootProject.file("scripts/inject-volume-icon.sh").absolutePath
     doLast {
@@ -161,7 +161,7 @@ val injectVolumeIcon = tasks.register("injectVolumeIcon") {
 // 파일 자체 Finder 아이콘. 볼륨 아이콘 주입이 dmg 를 재압축하므로 반드시 그 뒤에 실행.
 val dmgIconize = tasks.register("dmgIconize") {
     mustRunAfter(injectVolumeIcon)
-    val dmgPath = rootProject.file("dist/ClaudePet-1.0.0.dmg").absolutePath
+    val dmgPath = rootProject.file("dist/ClaudePet-${projectVersionProp}.dmg").absolutePath
     val iconPath = file("icons/app-icon.icns").absolutePath
     doLast {
         val dmg = File(dmgPath)
