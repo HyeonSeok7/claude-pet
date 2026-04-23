@@ -2,7 +2,8 @@ package com.myclaudepet.ui.theme
 
 object PetStrings {
     const val AppName = "Claude Pet"
-    const val TrayShow = "펫 보이기/숨기기"
+    const val TrayShow = "펫 보이기"
+    const val TrayHide = "펫 숨기기"
     const val TrayFeed = "🍚 밥 주기"
     const val TrayQuit = "종료"
     const val TrayStats = "상태 보기"

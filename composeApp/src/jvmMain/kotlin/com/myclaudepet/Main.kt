@@ -15,6 +15,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.myclaudepet.data.platform.ScreenDefaults
 import com.myclaudepet.di.appModule
 import com.myclaudepet.domain.model.PetPosition
 import com.myclaudepet.domain.repository.PetRepository
@@ -70,11 +71,18 @@ fun main() {
         val uiState by stateHolder.state.collectAsState()
         var windowVisible by remember { mutableStateOf(true) }
 
+        // 저장된 위치가 현재 화면 밖이면(외장 모니터 해제·해상도 변경 등) 기본 위치로 폴백.
+        // 그렇지 않으면 사용자가 창을 찾지 못해 "안 뜬다" 로 인식하게 된다.
+        val safePosition = remember {
+            if (ScreenDefaults.isOnScreen(initialPet.position)) initialPet.position
+            else ScreenDefaults.initialPosition()
+        }
+
         val windowState = rememberWindowState(
             size = DpSize(PetDimens.WindowWidth, PetDimens.WindowHeight),
             position = WindowPosition.Absolute(
-                x = initialPet.position.x.dp,
-                y = initialPet.position.y.dp,
+                x = safePosition.x.dp,
+                y = safePosition.y.dp,
             ),
         )
 
@@ -150,7 +158,10 @@ fun main() {
             icon = PetTrayIcon.load(),
             tooltip = PetStrings.AppName,
             menu = {
-                Item(PetStrings.TrayShow, onClick = { windowVisible = !windowVisible })
+                Item(
+                    if (windowVisible) PetStrings.TrayHide else PetStrings.TrayShow,
+                    onClick = { windowVisible = !windowVisible },
+                )
                 Item(PetStrings.TrayFeed, onClick = { stateHolder.onEvent(PetUiEvent.Feed) })
                 Item(
                     PetStrings.TrayQuit,
