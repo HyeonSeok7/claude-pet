@@ -223,8 +223,7 @@ compose.desktop {
             windows {
                 menuGroup = "ClaudePet"
                 upgradeUuid = "6fdd1f0c-3f26-4d76-9a7f-8a4c3b9a24cc"
-                // iconFile.set(project.file("icons/app-icon.ico"))
-                // ↑ Windows .ico 는 ImageMagick 필요. Windows 빌드 시점에 별도 생성.
+                iconFile.set(project.file("icons/app-icon.ico"))
             }
             linux {
                 iconFile.set(project.file("icons/app-icon.png"))
